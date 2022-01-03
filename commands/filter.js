@@ -84,8 +84,8 @@ export default new Command({
     ],
   },
   permissions: {
-    self: [1<<1, 1<<2, 1<<13, 1<<40],
-    user: [1<<1, 1<<2, 1<<13, 1<<40],
+    self: [1n<<1n, 1n<<2n, 1n<<13n, 1n<<40n],
+    user: [1n<<1n, 1n<<2n, 1n<<13n, 1n<<40n],
   },
 
   async run(interaction) {
