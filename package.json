@@ -1,7 +1,7 @@
 {
   "name": "@ruinguard/automod",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "decription": "",
   "exports": "./index.js",
   "license": "MIT",
