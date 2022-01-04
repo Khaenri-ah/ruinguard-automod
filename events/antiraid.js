@@ -21,25 +21,26 @@ export default [
     async run(member) {
       // only new users
       if (Date.now() - member.user.createdTimestamp > 7 * 24 * 3_600_000) return;
-      const antiraid = member.client.antiraid;
+      const ratelimits = member.client.antiraid.ratelimits;
+      const raid = member.client.antiraid.raid.get(member.guild.id);
 
       // raid in progress
-      if (Date.now() - antiraid.raid <= 30_000) {
-        antiraid.raid = Date.now();
-        antiraid.ratelimits.call(member.guild.id);
+      if (Date.now() - raid <= 30_000) {
+        member.client.antiraid.raid.set(member.guild.id, Date.now());
+        ratelimits.call(member.guild.id);
         return member.ban({ reason: `raid: ${Date()}` }).catch(() => {});
       }
 
-      const limit = antiraid.ratelimits.call(member.guild.id, { cache: member.id });
+      const limit = ratelimits.call(member.guild.id, { cache: member.id });
 
       // no raid starting
       if (!limit) {
-        antiraid.raid = false;
+        if (raid) member.client.antiraid.raid.set(member.guild.id, false);
         return;
       }
 
       // raid starting
-      antiraid.raid = Date.now();
+      member.client.antiraid.raid.set(member.guild.id, Date.now());
       for (const id of limit.c) {
         await member.guild.members.ban(id, { reason: `raid: ${Date()}` }).catch(() => {});
       }
