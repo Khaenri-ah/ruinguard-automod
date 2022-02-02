@@ -2,7 +2,7 @@ import { Module } from '@ruinguard/core';
 import { getDir } from 'file-ez';
 
 const module = await new Module({
-  commands: getDir('./commands').path,
+  // commands: getDir('./commands').path,
   events: getDir('./events').path,
   intents: [1<<0, 1<<1, 1<<9],
 });
