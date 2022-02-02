@@ -1,4 +1,4 @@
-import { Event, RatelimitManager } from '@ruinguard/core';
+import { Collection, Event, RatelimitManager } from '@ruinguard/core';
 
 export default [
   new Event({
@@ -10,7 +10,7 @@ export default [
           duration: 10_000,
           limit: 5,
         }),
-        raid: false,
+        raid: new Collection(),
       };
     },
   }),
@@ -19,13 +19,12 @@ export default [
     name: 'antiraid',
     event: 'guildMemberAdd',
     async run(member) {
-      // only new users
-      if (Date.now() - member.user.createdTimestamp > 7 * 24 * 3_600_000) return;
+      // if (Date.now() - member.user.createdTimestamp > 7 * 24 * 3_600_000) return;
       const ratelimits = member.client.antiraid.ratelimits;
       const raid = member.client.antiraid.raid.get(member.guild.id);
 
       // raid in progress
-      if (Date.now() - raid <= 30_000) {
+      if (Date.now() - raid <= 10_000) {
         member.client.antiraid.raid.set(member.guild.id, Date.now());
         ratelimits.call(member.guild.id);
         return member.ban({ reason: `raid: ${Date()}` }).catch(() => {});
